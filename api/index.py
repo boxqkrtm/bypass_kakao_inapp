@@ -1,4 +1,5 @@
 from flask import Flask, request
+from urllib.parse import urlparse
 
 app = Flask(__name__)
 
@@ -8,7 +9,15 @@ def escape_kakao_help():
 
 @app.route('/<path:url>', methods=['GET', 'POST'])
 def escape_kakao(url):
-    redirect_url = url
+    # URL 파싱
+    parsed_url = urlparse(url)
+    
+    # 스키마(http:// 또는 https://)가 없는 경우 https:// 추가
+    if not parsed_url.scheme:
+        redirect_url = f'https://{url}'
+    else:
+        redirect_url = url
+
     return f'''
     페이지 이동 중입니다.
     <script>
@@ -35,5 +44,6 @@ def escape_kakao(url):
     }}
     </script>
     '''
+
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=80)

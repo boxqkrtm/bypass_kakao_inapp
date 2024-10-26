@@ -39,8 +39,8 @@ def escape_kakao(url):
     // 프래그먼트가 존재하는 경우 서버에 추가 요청
     if (fragment) {{
         finalUrl += (finalUrl.includes('?') ? '&' : '?') + '#' + encodeURIComponent(fragment);
-        location.href = finalUrl;
-    }} else {{
+    }}
+    {{
         let needClose = true;
         if (/android/.test(userAgent)) {{
             location.href = 'kakaotalk://web/openExternal?url=' + encodeURIComponent(finalUrl);

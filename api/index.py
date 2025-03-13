@@ -25,11 +25,9 @@ def escape_kakao(url):
         redirect_url = urlunparse((parsed_url.scheme, parsed_url.netloc, parsed_url.path, '', parsed_url.query, fragment))
 
     # JavaScript에 전달하기 위해 URL을 이스케이프 처리
-    redirect_url_js = redirect_url.replace("'", "\\'")  # 작은 따옴표를 이스케이프 처리
-
-    print(redirect_url)  # 콘솔에 출력하여 확인
+    redirect_url = redirect_url.replace("'", "\\'").replace("///", "//")
     
-    return render_template('template.html', redirect_url=redirect_url, redirect_url_js=redirect_url_js)
+    return render_template('template.html', redirect_url=redirect_url, redirect_url_js=redirect_url)
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=8080)

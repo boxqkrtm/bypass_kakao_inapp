@@ -17,16 +17,14 @@ def escape_kakao(url):
 
     # URL 파싱
     parsed_url = urlparse(full_url)
-    
     # 스키마(http:// 또는 https://)가 없는 경우 https:// 추가
-    if not parsed_url.scheme:
-        redirect_url = urlunparse(('https', parsed_url.netloc, parsed_url.path, '', parsed_url.query, fragment))
-    else:
-        redirect_url = urlunparse((parsed_url.scheme, parsed_url.netloc, parsed_url.path, '', parsed_url.query, fragment))
+    redirect_url = urlunparse((parsed_url.scheme, parsed_url.netloc, parsed_url.path, '', parsed_url.query, fragment))
+
+    # 맨 앞에 https://, http://가 없는 경우 https:// 추가
+    if not redirect_url.startswith('https://') and not redirect_url.startswith('http://'):
+        redirect_url = 'https://' + redirect_url
 
     # JavaScript에 전달하기 위해 URL을 이스케이프 처리
-    redirect_url = redirect_url.replace("'", "\\'").replace("///", "//")
-    
     return render_template('template.html', redirect_url=redirect_url, redirect_url_js=redirect_url)
 
 if __name__ == '__main__':

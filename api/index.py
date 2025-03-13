@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, render_template
 from urllib.parse import urlparse, urlunparse, unquote
 
 app = Flask(__name__)
@@ -29,40 +29,7 @@ def escape_kakao(url):
 
     print(redirect_url)  # 콘솔에 출력하여 확인
     
-    return f'''
-    페이지 이동 중입니다. (이동할 주소: {redirect_url})
-    <script>
-    const userAgent = navigator.userAgent.toLowerCase();
-    let fragment = location.hash.substring(1); // # 제거한 프래그먼트 값
-    let finalUrl = '{redirect_url_js}';
-    
-    // 프래그먼트가 존재하는 경우 서버에 추가 요청
-    if (fragment) {{
-        finalUrl += (finalUrl.includes('?') ? '&' : '?') + '#' + encodeURIComponent(fragment);
-    }}
-    {{
-        let needClose = true;
-        if (/android/.test(userAgent)) {{
-            location.href = 'kakaotalk://web/openExternal?url=' + encodeURIComponent(finalUrl);
-            needClose = false;
-        }} else if (/ipad|iphone|ipod/.test(userAgent)) {{
-            location.href = 'kakaotalk://web/openExternal?url=' + encodeURIComponent(finalUrl);
-        }} else {{
-            needClose = false;
-            location.href = finalUrl;
-        }}
-        if(needClose){{
-            document.addEventListener("visibilitychange", () => {{
-            if(document.visibilityState == "visible") {{
-                location.href = /ipad|iphone|ipod/.test(userAgent)
-                    ? 'kakaoweb://closeBrowser'
-                    : 'kakaotalk://inappbrowser/close';
-            }}
-            }});
-        }}
-    }}
-    </script>
-    '''
+    return render_template('template.html', redirect_url=redirect_url, redirect_url_js=redirect_url_js)
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=80)
+    app.run(debug=True, host='0.0.0.0', port=8080)
